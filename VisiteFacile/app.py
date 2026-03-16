@@ -1,12 +1,9 @@
 from flask import Flask
+from controllers import visiteurs_controller as vc
 
 app = Flask(__name__)
 
-
-@app.route('/')
-def hello_world():  # put application's code here
-    return 'Hello World!'
-
+app.register_blueprint(vc.visiteurs_controller)
 
 if __name__ == '__main__':
     app.run()
