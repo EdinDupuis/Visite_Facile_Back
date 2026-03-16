@@ -1,1 +1,2 @@
-from VisiteFacile.services.visiteur import Visiteur
+from services.visiteur import Visiteur
+
