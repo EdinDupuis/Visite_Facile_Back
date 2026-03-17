@@ -10,6 +10,7 @@ visiteurs_controller = Blueprint('visiteurs', __name__, url_prefix='/visiteurs')
 
 @visiteurs_controller.route('/', methods=['GET'])
 def find_all() -> tuple[Response, int]:
+    _id: int = request.args.get('_id', '', type=int)
     nom: str = request.args.get('nom', '', type=str)
     prénom: str = request.args.get('prénom', '', type=str)
     date_naissance: str = request.args.get('date_naissance', '', type=str)
@@ -22,7 +23,7 @@ def find_all() -> tuple[Response, int]:
 
 @visiteurs_controller.route('/', methods=['POST'])
 def add_visiteur() -> tuple[Response, int]:
-    existing_fields = {"prénom", "nom", "mail", "date_naissance","specialité_1","specialité_2", "réorientation",
+    existing_fields = {"prénom", "nom", "mail", "date_naissance", "bac_préparé", "specialité_1","specialité_2", "réorientation",
                        "département_visité", "ville", "établissement", "immersion", "évènement", "autre"}
     data = request.get_json()
 
