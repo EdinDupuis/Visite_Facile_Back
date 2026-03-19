@@ -26,27 +26,27 @@ def get_visiteurs():
     page: int = request.args.get('page', 1, type=int)
 
     if nom:
-        query['nom'] = nom
+        query['nom'] = {'$regex': nom, '$options': 'i'}
     if prenom:
-        query['prenom'] = prenom
+        query['prenom'] = {'$regex': prenom, '$options': 'i'}
     if etablissement:
-        query['établissement'] = etablissement
+        query['établissement'] = {'$regex': etablissement, '$options': 'i'}
     if date_naissance:
         query['date_naissance'] = date_naissance
     if specialite_1:
-        query['specialité_1'] = specialite_1
+        query['specialité_1'] = {'$regex': specialite_1, '$options': 'i'}
     if specialite_2:
-        query['specialité_2'] = specialite_2
+        query['specialité_2'] = {'$regex': specialite_2, '$options': 'i'}
     if reorientation:
-        query['réorientation'] = reorientation
+        query['réorientation'] = {'$regex': reorientation, '$options': 'i'}
     if departement_visite:
-        query['département_visité'] = departement_visite
+        query['département_visité'] = {'$regex': departement_visite, '$options': 'i'}
     if ville:
-        query['ville'] = ville
+        query['ville'] = {'$regex': ville, '$options': 'i'}
     if immersion:
-        query['immersion'] = immersion
+        query['immersion'] = {'$regex': immersion, '$options': 'i'}
     if evenement:
-        query['évènement'] = evenement
+        query['évènement'] = {'$regex': evenement, '$options': 'i'}
 
     resultat = visiteurs_service.trouver_visiteurs(query, limit, page)
     return jsonify(resultat), 200
