@@ -20,6 +20,7 @@ def add_visiteur() -> tuple[Response, int]:
         bac = data.get('bac'),
         specialite_1=data.get('specialite_1'),
         specialite_2=data.get('specialite_2'),
+        filiere=data.get('filiere'),
         reorientation=data.get('reorientation'),
         departement_visite=data.get('departement_visite'),
         ville=data.get('ville'),
