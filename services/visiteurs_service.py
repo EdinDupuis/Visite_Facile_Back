@@ -3,5 +3,5 @@ from dtos import VisiteurDTO
 
 def add_visiteur(dto: VisiteurDTO):
     insert = dto.to_mongo_dict()
-    return visiteurs.insert_one(insert)
+    result = visiteurs.insert_one(insert)
 

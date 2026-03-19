@@ -19,10 +19,11 @@ class VisiteurDTO:
         self.evenement = evenement
         self.autre = autre
 
-    def to_mongo_dict(self): # Sert à "purger" les champs où y'a None, comme ça on insère pas des données parasite dans la BD
-        res ={}
+    def to_mongo_dict(self): # Sert à "purger" les champs où y'a None '' ou False, comme ça on insère pas des données parasite dans la BD
+        res = {}
         for key, value in self.__dict__.items():
-            if value is not None:
+            if value not in [None, '', False]:
                 res[key] = value
-
         return res
+
+

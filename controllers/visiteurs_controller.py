@@ -16,7 +16,7 @@ def add_visiteur() -> tuple[Response, int]:
         prenom=data.get('prenom'),
         nom=data.get('nom'),
         mail=data.get('mail'),
-        date_naissance=data.get('data_naissance'),
+        date_naissance=data.get('date_naissance'),
         bac = data.get('bac'),
         specialite_1=data.get('specialite_1'),
         specialite_2=data.get('specialite_2'),
