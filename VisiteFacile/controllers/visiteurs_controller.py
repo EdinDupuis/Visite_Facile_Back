@@ -22,6 +22,9 @@ def get_visiteurs():
     immersion = request.args.get('immersion')
     evenement = request.args.get('évènement')
 
+    limit: int = request.args.get('limit', 20, type=int)
+    page: int = request.args.get('page', 1, type=int)
+
     if nom:
         query['nom'] = nom
     if prenom:
@@ -45,7 +48,7 @@ def get_visiteurs():
     if evenement:
         query['évènement'] = evenement
 
-    resultat = visiteurs_service.trouver_visiteurs(query)
+    resultat = visiteurs_service.trouver_visiteurs(query, limit, page)
     return jsonify(resultat), 200
 
 
