@@ -1,11 +1,12 @@
 from flask import Flask
-
+from controllers.visiteurs_controller import visiteurs_controller
+from flask_cors import CORS
 app = Flask(__name__)
 
 
-@app.route('/')
-def hello_world():  # put application's code here
-    return 'Hello World!'
+CORS(app)
+
+app.register_blueprint(visiteurs_controller)
 
 
 if __name__ == '__main__':
