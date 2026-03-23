@@ -2,8 +2,7 @@ from flask import Blueprint, jsonify, request, Response
 
 import services.visiteurs_service
 from dtos.VisiteurDTO import VisiteurDTO
-from services import visiteurs_service
-from utils.connect import bd, visiteurs
+
 
 visiteurs_controller = Blueprint('visiteurs', __name__, url_prefix='/visiteurs')
 
