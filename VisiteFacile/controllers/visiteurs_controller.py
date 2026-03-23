@@ -1,9 +1,7 @@
 from flask import Blueprint, jsonify, request, Response
 
-
-import services.visiteurs_service
-from dtos.VisiteurDTO import VisiteurDTO
-
+from VisiteFacile.services import visiteurs_service
+from VisiteFacile.dtos import VisiteurDTO
 
 visiteurs_controller = Blueprint('visiteurs', __name__, url_prefix='/visiteurs')
 
@@ -30,7 +28,7 @@ def add_visiteur() -> tuple[Response, int]:
         autre=data.get('autre')
     )
 
-    result = services.visiteurs_service.add_visiteur(visiteur)
+    result = visiteurs_service.add_visiteur(visiteur)
 
     return jsonify(result), 201
 
