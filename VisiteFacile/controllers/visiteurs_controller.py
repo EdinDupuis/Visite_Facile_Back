@@ -1,9 +1,8 @@
 from flask import Blueprint, jsonify, request, Response
 
 from VisiteFacile.services import visiteurs_service
-from VisiteFacile.dtos import VisiteurDTO
+from VisiteFacile.dtos.VisiteurDTO import VisiteurDTO
 
-from datetime import date
 
 visiteurs_controller = Blueprint('visiteurs', __name__, url_prefix='/visiteurs')
 
@@ -25,7 +24,6 @@ def find_all() -> tuple[Response, int]:
 @visiteurs_controller.route('/', methods=['POST'])
 def add_visiteur() -> tuple[Response, int]:
     data = request.get_json()
-
     visiteur = VisiteurDTO(
         prenom=data.get('prenom'),
         nom=data.get('nom'),
