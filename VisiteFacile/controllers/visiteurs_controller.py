@@ -3,7 +3,23 @@ from flask import Blueprint, jsonify, request, Response
 from VisiteFacile.services import visiteurs_service
 from VisiteFacile.dtos import VisiteurDTO
 
+from datetime import date
+
 visiteurs_controller = Blueprint('visiteurs', __name__, url_prefix='/visiteurs')
+
+
+@visiteurs_controller.route('/', methods=['GET'])
+def find_all() -> tuple[Response, int]:
+    _id: int = request.args.get('_id', '', type=int)
+    nom: str = request.args.get('nom', '', type=str)
+    prénom: str = request.args.get('prénom', '', type=str)
+    date_naissance: str = request.args.get('date_naissance', '', type=str)
+    ville: str = request.args.get('ville', '', type=str)
+    département_visité: str = request.args.get('département_visité', '', type=str)
+    limit: int = request.args.get('limit', 20, type=int)
+    page: int = request.args.get('page', 1, type=int)
+    resultat = visiteurs_service.get_visiteurs()
+    return jsonify(resultat), 200
 
 
 @visiteurs_controller.route('/', methods=['POST'])
@@ -15,7 +31,7 @@ def add_visiteur() -> tuple[Response, int]:
         nom=data.get('nom'),
         mail=data.get('mail'),
         date_naissance=data.get('date_naissance'),
-        bac = data.get('bac'),
+        bac=data.get('bac'),
         specialite_1=data.get('specialite_1'),
         specialite_2=data.get('specialite_2'),
         filiere=data.get('filiere'),
@@ -33,12 +49,6 @@ def add_visiteur() -> tuple[Response, int]:
     return jsonify(result), 201
 
 
-
-
-
-
-
-
 @visiteurs_controller.route('/', methods=['GET'])
 def get_visiteurs():
     query = {}
@@ -48,7 +58,7 @@ def get_visiteurs():
     date_naissance = request.args.get('date_naissance')
     specialite_1 = request.args.get('specialité_1')
     specialite_2 = request.args.get('specialité_2')
-    reorientation =request.args.get('réorientation')
+    reorientation = request.args.get('réorientation')
     departement_visite = request.args.get('département_visité')
     ville = request.args.get('ville')
     etablissement = request.args.get('établissement')
@@ -83,22 +93,3 @@ def get_visiteurs():
 
     resultat = visiteurs_service.trouver_visiteurs(query, limit, page)
     return jsonify(resultat), 200
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
