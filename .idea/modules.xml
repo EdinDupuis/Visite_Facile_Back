@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/.idea/VisiteFacile.iml" filepath="$PROJECT_DIR$/.idea/VisiteFacile.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/.idea/S4A_2026_Visite-facile_BACK.iml" filepath="$PROJECT_DIR$/.idea/S4A_2026_Visite-facile_BACK.iml" />
+>>>>>>> 7e62bde (initialisation projet)
     </modules>
   </component>
 </project>
