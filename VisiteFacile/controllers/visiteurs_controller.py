@@ -1,17 +1,15 @@
 from flask import Blueprint, jsonify, request, Response
 
-from VisiteFacile.services import visiteurs_service
-from VisiteFacile.dtos.VisiteurDTO import VisiteurDTO
-
+from services import visiteurs_service
+from dtos.VisiteurDTO import VisiteurDTO
 
 visiteurs_controller = Blueprint('visiteurs', __name__, url_prefix='/visiteurs')
-
 
 @visiteurs_controller.route('/', methods=['GET'])
 def find_all() -> tuple[Response, int]:
     _id: int = request.args.get('_id', '', type=int)
     nom: str = request.args.get('nom', '', type=str)
-    prénom: str = request.args.get('prénom', '', type=str)
+    prenom: str = request.args.get('prenom', '', type=str)
     date_naissance: str = request.args.get('date_naissance', '', type=str)
     ville: str = request.args.get('ville', '', type=str)
     département_visité: str = request.args.get('département_visité', '', type=str)
@@ -91,3 +89,14 @@ def get_visiteurs():
 
     resultat = visiteurs_service.trouver_visiteurs(query, limit, page)
     return jsonify(resultat), 200
+
+
+@visiteurs_controller.route('/<string:visiteur_id>', methods=['DELETE'])
+def delete_visiteur(visiteur_id: str) -> tuple[Response, int]:
+
+    result = visiteurs_service.del_visiteur(visiteur_id)
+
+    if result.deleted_count > 0:
+        return jsonify({"message": "Visiteur supprimé"}), 200
+    else:
+        return jsonify({"message": "Visiteur non trouvé"}), 404

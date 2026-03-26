@@ -27,5 +27,3 @@ class VisiteurDTO:
             if value not in [None, '', False]:
                 res[key] = value
         return res
-
-

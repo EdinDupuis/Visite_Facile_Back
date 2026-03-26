@@ -1,6 +1,8 @@
-from VisiteFacile.utils.connect import visiteurs
+from bson import ObjectId
 
-from VisiteFacile.dtos import VisiteurDTO
+from utils.connect import visiteurs
+
+from dtos import VisiteurDTO
 
 def add_visiteur(dto: VisiteurDTO):
     insert = dto.to_mongo_dict()
@@ -17,10 +19,12 @@ def trouver_visiteurs(query: dict, limit, page):
     return visiteurs_list
 
 def get_visiteurs():
-    users = list(visiteurs.find({}, {"_id": 1, "nom": 1, "prénom": 1, "date_naissance": 1, "ville": 1, "département_visité": 1}))
-
+    users = list(visiteurs.find({}, {"_id": 1, "nom": 1, "prenom": 1, "date_naissance": 1, "ville": 1, "département_visité": 1}))
     for user in users:
         user["_id"] = str(user["_id"])
     return users
 
+def del_visiteur(visiteur_id : str):
+    result = visiteurs.delete_one({"_id": ObjectId(visiteur_id)})
+    return result
 
