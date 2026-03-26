@@ -93,7 +93,7 @@ def get_visiteurs():
     return jsonify(resultat), 200
 
 
-@visiteurs_controller.route('/<id>', methods=['PUT'])
+@visiteurs_controller.route('details/<id>', methods=['PUT'])
 def update_visiteur(id:str) -> tuple[Response, int]:
     data = request.get_json()
 
