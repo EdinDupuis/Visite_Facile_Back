@@ -1,8 +1,8 @@
 class VisiteurDTO:
-    def __init__(self, prenom, nom, mail=None, date_naissance=None, specialite_1=None,
-                 specialite_2=None,filiere=None,bac=None, reorientation=None, departement_visite=None,
-                 ville=None, etablissement=None, immersion=None, evenement=None, autre=None):
-
+    def __init__(self, id, prenom, nom, mail, date_naissance, specialite_1,
+                 specialite_2, filiere, bac, reorientation, departement_visite,
+                 ville, etablissement, immersion, evenement, autre):
+        self.id = id
         self.prenom = prenom
         self.nom = nom
         self.mail = mail
@@ -19,13 +19,14 @@ class VisiteurDTO:
         self.evenement = evenement
         self.autre = autre
 
-
-
-    def to_mongo_dict(self): # Sert à "purger" les champs où y'a None '' ou False, comme ça on insère pas des données parasite dans la BD
+    def to_mongo_dict(
+            self):  # Sert à "purger" les champs où y'a None '' ou False, comme ça on insère pas des données parasite
+        # dans la BD
         res = {}
         for key, value in self.__dict__.items():
             if value not in [None, '', False]:
-                res[key] = value
+                if key == "id":
+                    res["_id"] = value
+                else:
+                    res[key] = value
         return res
-
-
