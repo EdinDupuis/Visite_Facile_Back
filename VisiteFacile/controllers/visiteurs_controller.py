@@ -94,7 +94,7 @@ def get_visiteurs():
 
 
 @visiteurs_controller.route('details/<id>', methods=['PUT'])
-def update_visiteur(id:str) -> tuple[Response, int]:
+def update_visiteur(id: str) -> tuple[Response, int]:
     data = request.get_json()
 
     visiteur = UpdateVisiteurDTO(
@@ -114,7 +114,6 @@ def update_visiteur(id:str) -> tuple[Response, int]:
         autre=data.get('autre')
     )
 
-    result = visiteurs_service.update_visiteur(visiteur,id)
+    result = visiteurs_service.update_visiteur(visiteur, id)
 
     return jsonify(result), 204
-
