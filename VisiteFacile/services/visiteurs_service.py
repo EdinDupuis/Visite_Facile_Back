@@ -1,9 +1,10 @@
 from VisiteFacile.utils.connect import visiteurs
 from bson import ObjectId
-from VisiteFacile.dtos import VisiteurDTO
+import VisiteFacile.dtos.VisiteurDTO as DTO
 
 
-def add_visiteur(dto: VisiteurDTO):
+
+def add_visiteur(dto: DTO.VisiteurDTO):
     insert = dto.to_mongo_dict()
     result = visiteurs.insert_one(insert)
 
@@ -27,9 +28,16 @@ def get_visiteurs():
     return users
 
 
-def update_visiteur(dto: VisiteurDTO):
+def get_infos(visiteur_id: str):
+    infos = visiteurs.find_one({"_id": ObjectId(visiteur_id)})
+
+    if infos:
+        infos["_id"] = str(infos["_id"])
+    return infos
+
+
+def update_visiteur(dto: DTO.UpdateVisiteurDTO, visiteur_id: str):
     update = dto.to_mongo_dict()
-    id_to_update = ObjectId(update.pop("_id"))  # besoin de caster en ObjectId sinon matchedCount retournera toujours
-    # 0 et donc on trouvera jamais le visiteur avec l'id X. Et on fait un pop car sinon on a une erreur du genre
-    # "peut pas modifier id car id est pas modifiable"
-    result = visiteurs.update_one({"_id": id_to_update}, {"$set": update})
+    visiteur = get_infos(visiteur_id)
+    visiteur_id = ObjectId(visiteur["_id"]) # besoin de caster en ObjectId sinon matchedCount retournera toujours 0 et donc on trouvera jamais le visiteur avec l'id X.
+    result = visiteurs.update_one({"_id": visiteur_id}, {"$set": update})
