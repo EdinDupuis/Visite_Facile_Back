@@ -3,7 +3,6 @@ from bson import ObjectId
 import VisiteFacile.dtos.VisiteurDTO as DTO
 
 
-
 def add_visiteur(dto: DTO.VisiteurDTO):
     insert = dto.to_mongo_dict()
     result = visiteurs.insert_one(insert)
@@ -36,8 +35,10 @@ def get_infos(visiteur_id: str):
     return infos
 
 
+
 def update_visiteur(dto: DTO.UpdateVisiteurDTO, visiteur_id: str):
     update = dto.to_mongo_dict()
     visiteur = get_infos(visiteur_id)
     visiteur_id = ObjectId(visiteur["_id"]) # besoin de caster en ObjectId sinon matchedCount retournera toujours 0 et donc on trouvera jamais le visiteur avec l'id X.
     result = visiteurs.update_one({"_id": visiteur_id}, {"$set": update})
+
