@@ -1,7 +1,9 @@
-class BaseDTO:
+from pydantic import BaseModel, ConfigDict
+
+class BaseDTO(BaseModel):
     def to_mongo_dict(self):
         res = {}
-        for key, value in self.__dict__.items():
+        for key, value in __dict__.items():
             if value not in [None, '']:
                 if key == "id":
                     res["_id"] = value
@@ -10,44 +12,48 @@ class BaseDTO:
         return res
 
 class VisiteurDTO(BaseDTO):
-    def __init__(self, id, prenom, nom, mail, date_naissance, specialite_1,
-                 specialite_2, filiere, bac, reorientation, departement_visite,
-                 ville, etablissement, immersion, evenement, autre):
-        self.id = id
-        self.prenom = prenom
-        self.nom = nom
-        self.mail = mail
-        self.date_naissance = date_naissance
-        self.bac = bac
-        self.specialite_1 = specialite_1
-        self.specialite_2 = specialite_2
-        self.filiere = filiere
-        self.reorientation = reorientation
-        self.departement_visite = departement_visite
-        self.ville = ville
-        self.etablissement = etablissement
-        self.immersion = immersion
-        self.evenement = evenement
-        self.autre = autre
+        id : str
+        prenom : str
+        nom : str
+        mail : str
+        date_naissance : str
+        bac : str
+        specialite_1 : str
+        specialite_2 : str
+        filiere : str
+        reorientation : bool
+        departement_visite : str
+        ville : str
+        etablissement : str
+        immersion : bool
+        evenement : str
+        autre : str
 
 class UpdateVisiteurDTO(BaseDTO):
-    def __init__(self, prenom, nom, mail, date_naissance, specialite_1,
-                 specialite_2, filiere, bac, reorientation, departement_visite,
-                 ville, etablissement, immersion, autre):
-        self.prenom = prenom
-        self.nom = nom
-        self.mail = mail
-        self.date_naissance = date_naissance
-        self.bac = bac
-        self.specialite_1 = specialite_1
-        self.specialite_2 = specialite_2
-        self.filiere = filiere
-        self.reorientation = reorientation
-        self.departement_visite = departement_visite
-        self.ville = ville
-        self.etablissement = etablissement
-        self.immersion = immersion
-        self.autre = autre
+        prenom : str
+        nom : str
+        mail : str
+        date_naissance : str
+        bac : str
+        specialite_1 : str
+        specialite_2 : str
+        filiere : str
+        reorientation : bool
+        departement_visite : str
+        ville : str
+        etablissement : str
+        immersion : bool
+        autre : str
+
+
+class GetVisiteurDTO(BaseDTO):
+        _id : str
+        nom : str
+        prenom : str
+        date_naissance : str
+        ville : str
+        departement_visite : str
+
 
 
 
