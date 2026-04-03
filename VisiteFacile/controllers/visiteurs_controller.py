@@ -6,10 +6,11 @@ from dtos.VisiteurDTO import *
 
 visiteurs_controller = Blueprint('visiteurs', __name__, url_prefix='/visiteurs')
 
+
 @visiteurs_controller.route('/', methods=['GET'])
 def find_all() -> tuple[Response, int]:
     limit: int = request.args.get("limit", 2, type=int)
-    page: int = request.args.get("page", 0, type=int)
+    page: int = request.args.get("page", 1, type=int)
 
     resultat = visiteurs_service.get_visiteurs(limit, page)
 
@@ -26,24 +27,25 @@ def add_visiteur() -> tuple[Response, int]:
     return jsonify(result), 201
 
 
-@visiteurs_controller.route('/args', methods=['GET'])
+@visiteurs_controller.route('/filtre', methods=['GET'])
 def get_visiteurs():
     query = {}
 
     nom = request.args.get('nom')
     prenom = request.args.get('prenom')
     date_naissance = request.args.get('date_naissance')
-    specialite_1 = request.args.get('specialité_1')
-    specialite_2 = request.args.get('specialité_2')
-    reorientation = request.args.get('réorientation')
-    departement_visite = request.args.get('département_visité')
+    specialite_1 = request.args.get('specialite_1')
+    specialite_2 = request.args.get('specialite_2')
+    reorientation = request.args.get('reorientation')
+    departement_visite = request.args.get('departement_visite')
     ville = request.args.get('ville')
-    etablissement = request.args.get('établissement')
+    etablissement = request.args.get('etablissement')
     immersion = request.args.get('immersion')
-    evenement = request.args.get('évènement')
+    evenement = request.args.get('evenement')
+    situation_particuliere = request.args.get('situation_particuliere')
 
-    limit: int = request.args.get("limit", 2, type=int)
-    page: int = request.args.get("page", 0, type=int)
+    limit: int = request.args.get("limit", 5, type=int)
+    page: int = request.args.get("page", 1, type=int)
 
     if nom:
         query['nom'] = {'$regex': nom, '$options': 'i'}
@@ -57,25 +59,26 @@ def get_visiteurs():
         query['specialite_1'] = {'$regex': specialite_1, '$options': 'i'}
     if specialite_2:
         query['specialite_2'] = {'$regex': specialite_2, '$options': 'i'}
-    if reorientation:
-        query['reorientation'] = {'$regex': reorientation, '$options': 'i'}
     if departement_visite:
         query['departement_visite'] = {'$regex': departement_visite, '$options': 'i'}
     if ville:
         query['ville'] = {'$regex': ville, '$options': 'i'}
-    if immersion:
-        query['immersion'] = {'$regex': immersion, '$options': 'i'}
     if evenement:
         query['evenement'] = {'$regex': evenement, '$options': 'i'}
 
-    resultat = visiteurs_service.trouver_visiteurs(query, limit, page)
-    return jsonify(resultat), 200
+    if reorientation == 'true':
+        query['reorientation'] = True
+    if immersion == 'true':
+        query['immersion'] = True
+    if situation_particuliere == 'true':
+        query['situation_particuliere'] = True
 
+    resultat = visiteurs_service.trouver_visiteurs(query, page, limit)
+    return jsonify(resultat), 200
 
 
 @visiteurs_controller.route('/<string:visiteur_id>', methods=['DELETE'])
 def delete_visiteur(visiteur_id: str) -> tuple[Response, int]:
-
     result = visiteurs_service.del_visiteur(visiteur_id)
 
     if result.deleted_count > 0:

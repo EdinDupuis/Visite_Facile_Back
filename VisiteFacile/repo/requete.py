@@ -1,3 +1,5 @@
+from typing import List
+
 import dtos.VisiteurDTO as DTO
 from utils.connect import visiteurs
 from bson import ObjectId
@@ -7,11 +9,15 @@ def add_visiteur(insert):
     result = visiteurs.insert_one(insert)
 
 
-def trouver_visiteur(query, limit, page):
-    visiteurs_list = list(visiteurs.find(query).skip((page - 1) * limit).limit(limit))
+def trouver_visiteur(query: dict, page, limit):
+    if len(query) != 0:
+        visiteurs_list = list(visiteurs.find(query).skip((page - 1) * limit).limit(limit))
+    else:
+        visiteurs_list = get_visiteurs(page, limit)
+    if visiteurs_list is not None:
+        for v in visiteurs_list:
+            v["_id"] = str(v["_id"])
 
-    for v in visiteurs_list:
-        v["_id"] = str(v["_id"])
 
     return visiteurs_list
 
