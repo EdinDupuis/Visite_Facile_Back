@@ -2,8 +2,10 @@ import VisiteFacile.dtos.VisiteurDTO as DTO
 from VisiteFacile.utils.connect import visiteurs
 from bson import ObjectId
 
+
 def add_visiteur(insert):
     result = visiteurs.insert_one(insert)
+
 
 def trouver_visiteur(query, limit, page):
     visiteurs_list = list(visiteurs.find(query).skip((page - 1) * limit).limit(limit))
@@ -14,9 +16,9 @@ def trouver_visiteur(query, limit, page):
     return visiteurs_list
 
 
-
 def get_visiteurs(page: int, limit: int):
-    users = list(visiteurs.find({}, {"_id": 1, "nom": 1, "prénom": 1, "date_naissance": 1, "ville": 1,"departement_visite": 1}).skip((page - 1) * limit).limit(limit))
+    users = list(visiteurs.find({}, {"_id": 1, "nom": 1, "prénom": 1, "date_naissance": 1, "ville": 1,
+                                     "departement_visite": 1}).skip((page - 1) * limit).limit(limit))
 
     for user in users:
         user["_id"] = str(user["_id"])
@@ -31,6 +33,7 @@ def get_infos(visiteur_id):
         infos["_id"] = str(infos["_id"])
 
     return infos
+
 
 def update_visiteur(visiteur_id: ObjectId, update: dict):
     visiteurs.update_one({"_id": visiteur_id}, {"$set": update})

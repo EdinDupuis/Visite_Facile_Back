@@ -6,8 +6,7 @@ import VisiteFacile.dtos.VisiteurDTO as DTO
 import VisiteFacile.repo.requete as repo
 
 
-
-def add_visiteur(dto: DTO.VisiteurDTO):
+def add_visiteur(dto: DTO.CreateVisiteurDTO):
     insert = dto.to_mongo_dict()
     repo.add_visiteur(insert)
 
@@ -29,14 +28,14 @@ def get_infos(visiteur_id: str):
     return repo.get_infos(visiteur_id)
 
 
-
-
 def update_visiteur(dto: DTO.UpdateVisiteurDTO, visiteur_id: str):
-    update = dto.to_mongo_dict()
     visiteur = get_infos(visiteur_id)
+    if not visiteur:
+        return None
+    update = dto.to_mongo_dict()
     visiteur_object_id = ObjectId(visiteur["_id"])
     repo.update_visiteur(visiteur_object_id, update)
-
+    return True
 
 
 def get_export(args):
@@ -48,8 +47,8 @@ def get_export(args):
         return None
 
     champs = ["nom", "prenom", "date_naissance", "mail", "ville", "etablissement",
-                "departement_visite", "bac", "specialite_1", "specialite_2",
-                "filiere", "reorientation", "immersion", "evenement", "autre"]
+              "departement_visite", "bac", "specialite_1", "specialite_2",
+              "filiere", "reorientation", "immersion", "evenement", "autre"]
 
     fichier = io.StringIO()
     writer = csv.DictWriter(fichier, fieldnames=champs, delimiter=";")
@@ -59,8 +58,10 @@ def get_export(args):
 
     return fichier
 
+
 def get_filtres(args):
-    champs_textuels = ["ville", "etablissement", "departement_visite", "bac", "specialite_1", "specialite_2", "filiere", "evenement"]
+    champs_textuels = ["ville", "etablissement", "departement_visite", "bac", "specialite_1", "specialite_2", "filiere",
+                       "evenement"]
     champs_booleens = ["reorientation", "immersion"]
 
     filtres = {}
