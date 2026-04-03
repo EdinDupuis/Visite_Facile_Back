@@ -1,58 +1,50 @@
+from typing import Optional
+
 from pydantic import BaseModel, ConfigDict
+
 
 class BaseDTO(BaseModel):
     def to_mongo_dict(self):
-        res = {}
-        for key, value in __dict__.items():
-            if value not in [None, '']:
-                if key == "id":
-                    res["_id"] = value
-                else:
-                    res[key] = value
+        res = self.model_dump(exclude_none=True)
+
+        res = {k: v for k, v in res.items() if v not in [None, "", False]}
+        if "id" in res:
+            res["_id"] = res.pop("id")
         return res
 
 
-class VisiteurDTO(BaseDTO):
-        id : str
-        prenom : str
-        nom : str
-        mail : str
-        date_naissance : str
-        bac : str
-        specialite_1 : str
-        specialite_2 : str
-        filiere : str
-        reorientation : bool
-        departement_visite : str
-        ville : str
-        etablissement : str
-        immersion : bool
-        evenement : str
-        autre : str
+class CreateVisiteurDTO(BaseDTO):
+    prenom: str
+    nom: str
+    mail: str
+    date_naissance: str
+    bac: str
+    specialite_1: str
+    specialite_2: str
+    filiere: Optional[str] = None
+    reorientation: Optional[bool] = False
+    departement_visite: str
+    ville: str
+    etablissement: str
+    immersion: Optional[bool] = False
+    evenement: str
+    autre: Optional[str] = None
+
 
 class UpdateVisiteurDTO(BaseDTO):
-        prenom : str
-        nom : str
-        mail : str
-        date_naissance : str
-        bac : str
-        specialite_1 : str
-        specialite_2 : str
-        filiere : str
-        reorientation : bool
-        departement_visite : str
-        ville : str
-        etablissement : str
-        immersion : bool
-        autre : str
-
-
-class GetVisiteurDTO(BaseDTO):
-        _id : str
-        nom : str
-        prenom : str
-        date_naissance : str
-        ville : str
-        departement_visite : str
-
+    prenom: Optional[str] = None
+    nom: Optional[str] = None
+    mail: Optional[str] = None
+    date_naissance: Optional[str] = None
+    bac: Optional[str] = None
+    specialite_1: Optional[str] = None
+    specialite_2: Optional[str] = None
+    filiere: Optional[str] = None
+    reorientation: Optional[bool] = None
+    departement_visite: Optional[str] = None
+    ville: Optional[str] = None
+    etablissement: Optional[str] = None
+    immersion: Optional[bool] = None
+    evenement: Optional[str] = None
+    autre: Optional[str] = None
 
