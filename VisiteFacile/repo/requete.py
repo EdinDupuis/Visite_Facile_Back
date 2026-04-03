@@ -1,5 +1,5 @@
-import VisiteFacile.dtos.VisiteurDTO as DTO
-from VisiteFacile.utils.connect import visiteurs
+import dtos.VisiteurDTO as DTO
+from utils.connect import visiteurs
 from bson import ObjectId
 
 def add_visiteur(insert):
