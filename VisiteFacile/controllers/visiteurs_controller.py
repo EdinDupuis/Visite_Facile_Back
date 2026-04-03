@@ -106,3 +106,11 @@ def update_visiteur(id: str) -> tuple[Response, int]:
 
     return jsonify(result), 204
 
+@visiteurs_controller.route('stats/export', methods=['GET'])
+def export_visiteurs() -> tuple[Response, int]:
+    fichier = visiteurs_service.get_export(request.args)
+
+    if fichier is None:
+        return jsonify(), 404
+
+    return Response(fichier, mimetype="text/csv", headers={"Content-Disposition": "attachment; filename=visiteurs.csv"}), 200
