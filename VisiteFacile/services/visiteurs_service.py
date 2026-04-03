@@ -1,8 +1,10 @@
+
 from VisiteFacile.utils.connect import visiteurs
 from bson import ObjectId
 import csv, io
 import VisiteFacile.dtos.VisiteurDTO as DTO
 import VisiteFacile.repo.requete as repo
+
 
 
 def add_visiteur(dto: DTO.VisiteurDTO):
@@ -14,12 +16,18 @@ def trouver_visiteurs(query: dict, limit, page):
     return repo.trouver_visiteur(query, limit, page)
 
 
+
+def del_visiteur(visiteur_id : str):
+    result = visiteurs.delete_one({"_id": ObjectId(visiteur_id)})
+    return result
+
 def get_visiteurs(page: int,  limit: int):
     return repo.get_visiteurs(page, limit)
 
 
 def get_infos(visiteur_id: str):
     return repo.get_infos(visiteur_id)
+
 
 
 

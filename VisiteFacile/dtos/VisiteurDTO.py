@@ -11,6 +11,7 @@ class BaseDTO(BaseModel):
                     res[key] = value
         return res
 
+
 class VisiteurDTO(BaseDTO):
         id : str
         prenom : str
@@ -53,7 +54,5 @@ class GetVisiteurDTO(BaseDTO):
         date_naissance : str
         ville : str
         departement_visite : str
-
-
 
 

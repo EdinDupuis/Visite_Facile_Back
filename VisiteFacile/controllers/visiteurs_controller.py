@@ -6,15 +6,14 @@ from VisiteFacile.dtos.VisiteurDTO import *
 
 visiteurs_controller = Blueprint('visiteurs', __name__, url_prefix='/visiteurs')
 
-
 @visiteurs_controller.route('/', methods=['GET'])
 def find_all() -> tuple[Response, int]:
-
 
     limit: int = request.args.get("limit", 20, type = int)
     page: int = request.args.get("page", 0, type = int)
 
     resultat = visiteurs_service.get_visiteurs(limit, page)
+
     return jsonify(resultat), 200
 
 
@@ -75,6 +74,17 @@ def get_visiteurs():
 
 
 
+@visiteurs_controller.route('/<string:visiteur_id>', methods=['DELETE'])
+def delete_visiteur(visiteur_id: str) -> tuple[Response, int]:
+
+    result = visiteurs_service.del_visiteur(visiteur_id)
+
+    if result.deleted_count > 0:
+        return jsonify({"message": "Visiteur supprimé"}), 200
+    else:
+        return jsonify({"message": "Visiteur non trouvé"}), 404
+
+
 @visiteurs_controller.route('/<visiteur_id>', methods=['GET'])
 def details_visiteurs(visiteur_id: str) -> tuple[Response, int]:
     info = visiteurs_service.get_infos(visiteur_id)
@@ -124,3 +134,4 @@ def export_visiteurs() -> tuple[Response, int]:
         return jsonify(), 404
 
     return Response(fichier, mimetype="text/csv", headers={"Content-Disposition": "attachment; filename=visiteurs.csv"}), 200
+
