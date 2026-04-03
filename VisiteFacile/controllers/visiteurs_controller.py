@@ -8,7 +8,7 @@ visiteurs_controller = Blueprint('visiteurs', __name__, url_prefix='/visiteurs')
 
 @visiteurs_controller.route('/', methods=['GET'])
 def find_all() -> tuple[Response, int]:
-    limit: int = request.args.get("limit", 20, type=int)
+    limit: int = request.args.get("limit", 2, type=int)
     page: int = request.args.get("page", 0, type=int)
 
     resultat = visiteurs_service.get_visiteurs(limit, page)
@@ -26,7 +26,7 @@ def add_visiteur() -> tuple[Response, int]:
     return jsonify(result), 201
 
 
-@visiteurs_controller.route('/', methods=['GET'])
+@visiteurs_controller.route('/args', methods=['GET'])
 def get_visiteurs():
     query = {}
 
@@ -42,7 +42,7 @@ def get_visiteurs():
     immersion = request.args.get('immersion')
     evenement = request.args.get('évènement')
 
-    limit: int = request.args.get("limit", 20, type=int)
+    limit: int = request.args.get("limit", 2, type=int)
     page: int = request.args.get("page", 0, type=int)
 
     if nom:
