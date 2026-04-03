@@ -1,3 +1,4 @@
+from dotenv import dotenv_values
 from flask import Blueprint, jsonify, request, Response
 
 from VisiteFacile.services import visiteurs_service
@@ -81,7 +82,7 @@ def details_visiteurs(visiteur_id: str) -> tuple[Response, int]:
         return jsonify(), 404
     return jsonify(info), 200
 
-@visiteurs_controller.route('details/<id>', methods=['PUT'])
+@visiteurs_controller.route('/<id>', methods=['PUT'])
 def update_visiteur(id: str) -> tuple[Response, int]:
     data = request.get_json()
 
@@ -106,6 +107,15 @@ def update_visiteur(id: str) -> tuple[Response, int]:
 
     return jsonify(result), 204
 
+@visiteurs_controller.route('/login', methods=['GET'])
+def login_admin() -> tuple[Response, int]:
+    mdp = request.args.get('mdp', '', type=str)
+    env_values = dotenv_values(".env")
+    password = env_values["ADMIN_PASSWORD"]
+    if mdp.__eq__(password):
+        return jsonify({'ok': True}), 200
+    return jsonify({'ok': False}), 401
+  
 @visiteurs_controller.route('stats/export', methods=['GET'])
 def export_visiteurs() -> tuple[Response, int]:
     fichier = visiteurs_service.get_export(request.args)
