@@ -1,30 +1,80 @@
+
+from VisiteFacile.utils.connect import visiteurs
 from bson import ObjectId
+import csv, io
+import VisiteFacile.dtos.VisiteurDTO as DTO
+import VisiteFacile.repo.requete as repo
 
-from utils.connect import visiteurs
 
-from dtos import VisiteurDTO
 
-def add_visiteur(dto: VisiteurDTO):
+def add_visiteur(dto: DTO.VisiteurDTO):
     insert = dto.to_mongo_dict()
-    result = visiteurs.insert_one(insert)
+    repo.add_visiteur(insert)
 
 
 def trouver_visiteurs(query: dict, limit, page):
-    skip = (page - 1) * limit
-    visiteurs_cursor = visiteurs.find(query).skip(skip).limit(limit)
-    visiteurs_list = list(visiteurs_cursor)
-    for v in visiteurs_list:
-        v["_id"] = str(v["_id"])
+    return repo.trouver_visiteur(query, limit, page)
 
-    return visiteurs_list
 
-def get_visiteurs():
-    users = list(visiteurs.find({}, {"_id": 1, "nom": 1, "prenom": 1, "date_naissance": 1, "ville": 1, "département_visité": 1}))
-    for user in users:
-        user["_id"] = str(user["_id"])
-    return users
 
 def del_visiteur(visiteur_id : str):
     result = visiteurs.delete_one({"_id": ObjectId(visiteur_id)})
     return result
 
+def get_visiteurs(page: int,  limit: int):
+    return repo.get_visiteurs(page, limit)
+
+
+def get_infos(visiteur_id: str):
+    return repo.get_infos(visiteur_id)
+
+
+
+
+def update_visiteur(dto: DTO.UpdateVisiteurDTO, visiteur_id: str):
+    update = dto.to_mongo_dict()
+    visiteur = get_infos(visiteur_id)
+    visiteur_object_id = ObjectId(visiteur["_id"])
+    repo.update_visiteur(visiteur_object_id, update)
+
+
+
+def get_export(args):
+    query = get_filtres(args)
+
+    documents = repo.get_visiteurs_avec_filtre(query)
+
+    if not documents:
+        return None
+
+    champs = ["nom", "prenom", "date_naissance", "mail", "ville", "etablissement",
+                "departement_visite", "bac", "specialite_1", "specialite_2",
+                "filiere", "reorientation", "immersion", "evenement", "autre"]
+
+    fichier = io.StringIO()
+    writer = csv.DictWriter(fichier, fieldnames=champs, delimiter=";")
+    writer.writeheader()
+    writer.writerows(documents)
+    fichier.seek(0)
+
+    return fichier
+
+def get_filtres(args):
+    champs_textuels = ["ville", "etablissement", "departement_visite", "bac", "specialite_1", "specialite_2", "filiere", "evenement"]
+    champs_booleens = ["reorientation", "immersion"]
+
+    filtres = {}
+
+    ## Permet de récupérer les filtres textuels
+    for f in champs_textuels:
+        value = args.get(f)
+        if value:
+            filtres[f] = {"$regex": value, "$options": "i"}
+
+    ## Permet de récupérer les filtres booleens
+    for f in champs_booleens:
+        value = args.get(f)
+        if value == "true":
+            filtres[f] = True
+
+    return filtres

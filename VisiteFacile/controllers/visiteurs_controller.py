@@ -1,47 +1,29 @@
+from dotenv import dotenv_values
 from flask import Blueprint, jsonify, request, Response
 
-from services import visiteurs_service
-from dtos.VisiteurDTO import VisiteurDTO
+from VisiteFacile.services import visiteurs_service
+from VisiteFacile.dtos.VisiteurDTO import *
 
 visiteurs_controller = Blueprint('visiteurs', __name__, url_prefix='/visiteurs')
 
 @visiteurs_controller.route('/', methods=['GET'])
 def find_all() -> tuple[Response, int]:
-    _id: int = request.args.get('_id', '', type=int)
-    nom: str = request.args.get('nom', '', type=str)
-    prenom: str = request.args.get('prenom', '', type=str)
-    date_naissance: str = request.args.get('date_naissance', '', type=str)
-    ville: str = request.args.get('ville', '', type=str)
-    département_visité: str = request.args.get('département_visité', '', type=str)
-    limit: int = request.args.get('limit', 20, type=int)
-    page: int = request.args.get('page', 1, type=int)
-    resultat = visiteurs_service.get_visiteurs()
+
+    limit: int = request.args.get("limit", 20, type = int)
+    page: int = request.args.get("page", 0, type = int)
+
+    resultat = visiteurs_service.get_visiteurs(limit, page)
+
     return jsonify(resultat), 200
 
 
 @visiteurs_controller.route('/', methods=['POST'])
 def add_visiteur() -> tuple[Response, int]:
     data = request.get_json()
-    visiteur = VisiteurDTO(
-        prenom=data.get('prenom'),
-        nom=data.get('nom'),
-        mail=data.get('mail'),
-        date_naissance=data.get('date_naissance'),
-        bac=data.get('bac'),
-        specialite_1=data.get('specialite_1'),
-        specialite_2=data.get('specialite_2'),
-        filiere=data.get('filiere'),
-        reorientation=data.get('reorientation'),
-        departement_visite=data.get('departement_visite'),
-        ville=data.get('ville'),
-        etablissement=data.get('etablissement'),
-        immersion=data.get('immersion'),
-        evenement=data.get('evenement'),
-        autre=data.get('autre')
+    visiteur = VisiteurDTO.model_validate_json(
+        **data
     )
-
     result = visiteurs_service.add_visiteur(visiteur)
-
     return jsonify(result), 201
 
 
@@ -61,8 +43,8 @@ def get_visiteurs():
     immersion = request.args.get('immersion')
     evenement = request.args.get('évènement')
 
-    limit: int = request.args.get('limit', 20, type=int)
-    page: int = request.args.get('page', 1, type=int)
+    limit: int = request.args.get("limit", 20, type = int)
+    page: int = request.args.get("page", 0, type = int)
 
     if nom:
         query['nom'] = {'$regex': nom, '$options': 'i'}
@@ -91,6 +73,7 @@ def get_visiteurs():
     return jsonify(resultat), 200
 
 
+
 @visiteurs_controller.route('/<string:visiteur_id>', methods=['DELETE'])
 def delete_visiteur(visiteur_id: str) -> tuple[Response, int]:
 
@@ -100,3 +83,55 @@ def delete_visiteur(visiteur_id: str) -> tuple[Response, int]:
         return jsonify({"message": "Visiteur supprimé"}), 200
     else:
         return jsonify({"message": "Visiteur non trouvé"}), 404
+
+
+@visiteurs_controller.route('/<visiteur_id>', methods=['GET'])
+def details_visiteurs(visiteur_id: str) -> tuple[Response, int]:
+    info = visiteurs_service.get_infos(visiteur_id)
+    if not info:
+        return jsonify(), 404
+    return jsonify(info), 200
+
+@visiteurs_controller.route('/<id>', methods=['PUT'])
+def update_visiteur(id: str) -> tuple[Response, int]:
+    data = request.get_json()
+
+    visiteur = UpdateVisiteurDTO(
+        prenom=data.get('prenom'),
+        nom=data.get('nom'),
+        mail=data.get('mail'),
+        date_naissance=data.get('date_naissance'),
+        bac=data.get('bac'),
+        specialite_1=data.get('specialite_1'),
+        specialite_2=data.get('specialite_2'),
+        filiere=data.get('filiere'),
+        reorientation=data.get('reorientation'),
+        departement_visite=data.get('departement_visite'),
+        ville=data.get('ville'),
+        etablissement=data.get('etablissement'),
+        immersion=data.get('immersion'),
+        autre=data.get('autre')
+    )
+
+    result = visiteurs_service.update_visiteur(visiteur, id)
+
+    return jsonify(result), 204
+
+@visiteurs_controller.route('/login', methods=['GET'])
+def login_admin() -> tuple[Response, int]:
+    mdp = request.args.get('mdp', '', type=str)
+    env_values = dotenv_values(".env")
+    password = env_values["ADMIN_PASSWORD"]
+    if mdp.__eq__(password):
+        return jsonify({'ok': True}), 200
+    return jsonify({'ok': False}), 401
+  
+@visiteurs_controller.route('stats/export', methods=['GET'])
+def export_visiteurs() -> tuple[Response, int]:
+    fichier = visiteurs_service.get_export(request.args)
+
+    if fichier is None:
+        return jsonify(), 404
+
+    return Response(fichier, mimetype="text/csv", headers={"Content-Disposition": "attachment; filename=visiteurs.csv"}), 200
+

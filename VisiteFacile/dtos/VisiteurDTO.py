@@ -1,29 +1,58 @@
-class VisiteurDTO:
-    def __init__(self, prenom, nom, mail=None, date_naissance=None, specialite_1=None,
-                 specialite_2=None,filiere=None,bac=None, reorientation=None, departement_visite=None,
-                 ville=None, etablissement=None, immersion=None, evenement=None, autre=None):
+from pydantic import BaseModel, ConfigDict
 
-        self.prenom = prenom
-        self.nom = nom
-        self.mail = mail
-        self.date_naissance = date_naissance
-        self.bac = bac
-        self.specialite_1 = specialite_1
-        self.specialite_2 = specialite_2
-        self.filiere = filiere
-        self.reorientation = reorientation
-        self.departement_visite = departement_visite
-        self.ville = ville
-        self.etablissement = etablissement
-        self.immersion = immersion
-        self.evenement = evenement
-        self.autre = autre
-
-
-
-    def to_mongo_dict(self): # Sert à "purger" les champs où y'a None '' ou False, comme ça on insère pas des données parasite dans la BD
+class BaseDTO(BaseModel):
+    def to_mongo_dict(self):
         res = {}
-        for key, value in self.__dict__.items():
-            if value not in [None, '', False]:
-                res[key] = value
+        for key, value in __dict__.items():
+            if value not in [None, '']:
+                if key == "id":
+                    res["_id"] = value
+                else:
+                    res[key] = value
         return res
+
+
+class VisiteurDTO(BaseDTO):
+        id : str
+        prenom : str
+        nom : str
+        mail : str
+        date_naissance : str
+        bac : str
+        specialite_1 : str
+        specialite_2 : str
+        filiere : str
+        reorientation : bool
+        departement_visite : str
+        ville : str
+        etablissement : str
+        immersion : bool
+        evenement : str
+        autre : str
+
+class UpdateVisiteurDTO(BaseDTO):
+        prenom : str
+        nom : str
+        mail : str
+        date_naissance : str
+        bac : str
+        specialite_1 : str
+        specialite_2 : str
+        filiere : str
+        reorientation : bool
+        departement_visite : str
+        ville : str
+        etablissement : str
+        immersion : bool
+        autre : str
+
+
+class GetVisiteurDTO(BaseDTO):
+        _id : str
+        nom : str
+        prenom : str
+        date_naissance : str
+        ville : str
+        departement_visite : str
+
+
