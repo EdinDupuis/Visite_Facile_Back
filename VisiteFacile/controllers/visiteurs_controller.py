@@ -34,6 +34,7 @@ def get_visiteurs():
     nom = request.args.get('nom')
     prenom = request.args.get('prenom')
     date_naissance = request.args.get('date_naissance')
+    bac = request.args.get('bac')
     specialite_1 = request.args.get('specialite_1')
     specialite_2 = request.args.get('specialite_2')
     reorientation = request.args.get('reorientation')
@@ -55,6 +56,8 @@ def get_visiteurs():
         query['etablissement'] = {'$regex': etablissement, '$options': 'i'}
     if date_naissance:
         query['date_naissance'] = date_naissance
+    if date_naissance:
+        query['bac'] = bac
     if specialite_1:
         query['specialite_1'] = {'$regex': specialite_1, '$options': 'i'}
     if specialite_2:
