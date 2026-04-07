@@ -1,5 +1,4 @@
-
-from utils.connect import visiteurs
+from VisiteFacile.utils.connect import visiteurs
 from bson import ObjectId
 import csv, io
 import dtos.VisiteurDTO as DTO
@@ -15,12 +14,12 @@ def trouver_visiteurs(query: dict, limit, page):
     return repo.trouver_visiteur(query, limit, page)
 
 
-
-def del_visiteur(visiteur_id : str):
+def del_visiteur(visiteur_id: str):
     result = visiteurs.delete_one({"_id": ObjectId(visiteur_id)})
     return result
 
-def get_visiteurs(page: int,  limit: int):
+
+def get_visiteurs(page: int, limit: int):
     return repo.get_visiteurs(page, limit)
 
 

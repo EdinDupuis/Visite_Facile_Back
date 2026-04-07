@@ -47,3 +47,4 @@ def update_visiteur(visiteur_id: ObjectId, update: dict):
 
 def get_visiteurs_avec_filtre(query):
     return list(visiteurs.find(query, {"_id": 0}))
+

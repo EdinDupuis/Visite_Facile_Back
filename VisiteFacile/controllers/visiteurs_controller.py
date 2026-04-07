@@ -1,8 +1,9 @@
 from dotenv import dotenv_values
 from flask import Blueprint, jsonify, request, Response
 
-from services import visiteurs_service
-from dtos.VisiteurDTO import *
+from VisiteFacile.dtos.ParametresDTO import UpdateParametresDTO
+from VisiteFacile.services import visiteurs_service, parametres_service
+from VisiteFacile.dtos.VisiteurDTO import *
 
 visiteurs_controller = Blueprint('visiteurs', __name__, url_prefix='/visiteurs')
 
@@ -131,3 +132,16 @@ def export_visiteurs() -> tuple[Response, int]:
 
     return Response(fichier, mimetype="text/csv",
                     headers={"Content-Disposition": "attachment; filename=visiteurs.csv"}), 200
+
+
+@visiteurs_controller.route('/parametres', methods=['PUT'])
+def update_parametres() -> tuple[Response, int]:
+    data = request.get_json()
+
+    parametre = UpdateParametresDTO.model_validate(
+        data
+    )
+    result = parametres_service.update_parametres(parametre)
+    if not result:
+        return jsonify(), 404
+    return '', 204
