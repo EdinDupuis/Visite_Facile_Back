@@ -2,9 +2,9 @@ from dotenv import dotenv_values
 from flask import Blueprint, jsonify, request, Response
 
 
-from VisiteFacile.dtos.ParametresDTO import UpdateParametresDTO
-from VisiteFacile.services import visiteurs_service, parametres_service
-from VisiteFacile.dtos.VisiteurDTO import *
+from dtos.ParametresDTO import UpdateParametresDTO
+from services import visiteurs_service, parametres_service
+from dtos.VisiteurDTO import *
 
 visiteurs_controller = Blueprint('visiteurs', __name__, url_prefix='/visiteurs')
 

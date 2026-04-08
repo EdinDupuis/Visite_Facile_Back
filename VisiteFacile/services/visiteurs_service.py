@@ -1,8 +1,8 @@
-from VisiteFacile.utils.connect import visiteurs
+from utils.connect import visiteurs
 from bson import ObjectId
 import csv, io
-import VisiteFacile.dtos.VisiteurDTO as DTO
-import VisiteFacile.repo.requete as repo
+import dtos.VisiteurDTO as DTO
+import repo.requete as repo
 
 
 def add_visiteur(dto: DTO.CreateVisiteurDTO):
@@ -52,9 +52,11 @@ def get_export(args):
               "filiere", "reorientation", "immersion", "evenement", "autre"]
 
     fichier = io.StringIO()
-    writer = csv.DictWriter(fichier, fieldnames=champs, delimiter=";")
+    writer = csv.DictWriter(fichier, fieldnames=champs, delimiter=";", extrasaction="ignore")
     writer.writeheader()
-    writer.writerows(documents)
+    for doc in documents:
+        row = {champ: doc.get(champ, "") for champ in champs}
+        writer.writerow(row)
     fichier.seek(0)
 
     return fichier
