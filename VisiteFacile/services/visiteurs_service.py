@@ -9,6 +9,8 @@ def add_visiteur(dto: DTO.CreateVisiteurDTO):
     insert = dto.to_mongo_dict()
     repo.add_visiteur(insert)
 
+def get_all(query):
+    return repo.get_all(query)
 
 def trouver_visiteurs(query: dict, page, limit):
     return repo.trouver_visiteur(query, page, limit)
