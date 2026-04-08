@@ -1,22 +1,12 @@
 from dotenv import dotenv_values
 from flask import Blueprint, jsonify, request, Response
 
+
 from VisiteFacile.dtos.ParametresDTO import UpdateParametresDTO
 from VisiteFacile.services import visiteurs_service, parametres_service
 from VisiteFacile.dtos.VisiteurDTO import *
 
 visiteurs_controller = Blueprint('visiteurs', __name__, url_prefix='/visiteurs')
-
-
-@visiteurs_controller.route('/', methods=['GET'])
-def find_all() -> tuple[Response, int]:
-    limit: int = request.args.get("limit", 2, type=int)
-    page: int = request.args.get("page", 1, type=int)
-
-    resultat = visiteurs_service.get_visiteurs(limit, page)
-
-    return jsonify(resultat), 200
-
 
 @visiteurs_controller.route('/', methods=['POST'])
 def add_visiteur() -> tuple[Response, int]:
