@@ -10,8 +10,8 @@ def add_visiteur(dto: DTO.CreateVisiteurDTO):
     repo.add_visiteur(insert)
 
 
-def trouver_visiteurs(query: dict, limit, page):
-    return repo.trouver_visiteur(query, limit, page)
+def trouver_visiteurs(query: dict, page, limit):
+    return repo.trouver_visiteur(query, page, limit)
 
 
 def del_visiteur(visiteur_id: str):

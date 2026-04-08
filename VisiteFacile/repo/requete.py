@@ -4,7 +4,6 @@ import VisiteFacile.dtos.VisiteurDTO as DTO
 from VisiteFacile.utils.connect import visiteurs
 from bson import ObjectId
 
-
 def add_visiteur(insert):
     result = visiteurs.insert_one(insert)
 
@@ -12,23 +11,22 @@ def add_visiteur(insert):
 def trouver_visiteur(query: dict, page, limit):
     if len(query) != 0:
         visiteurs_list = list(visiteurs.find(query).skip((page - 1) * limit).limit(limit))
-    else:
-        visiteurs_list = get_visiteurs(page, limit)
-    if visiteurs_list is not None:
         for v in visiteurs_list:
             v["_id"] = str(v["_id"])
 
-    return visiteurs_list
+        return visiteurs_list
+    else:
+        return get_visiteurs(page, limit)
 
 
 def get_visiteurs(page: int, limit: int):
-    users = list(visiteurs.find({}, {"_id": 1, "nom": 1, "prenom": 1, "date_naissance": 1, "ville": 1,
-                                     "departement_visite": 1}).skip((page - 1) * limit).limit(limit))
+    users = list(visiteurs.find({}, {"_id": 1, "nom": 1, "prenom": 1, "date_naissance": 1, "ville": 1, "departement_visite": 1}).skip((page - 1) * limit).limit(limit))
+    total = visiteurs.count_documents({})
 
     for user in users:
         user["_id"] = str(user["_id"])
 
-    return users
+    return {"visiteurs": users, "total": total}
 
 
 def get_infos(visiteur_id):
@@ -38,7 +36,6 @@ def get_infos(visiteur_id):
         infos["_id"] = str(infos["_id"])
 
     return infos
-
 
 def update_visiteur(visiteur_id: ObjectId, update: dict):
     visiteurs.update_one({"_id": visiteur_id}, {"$set": update})
