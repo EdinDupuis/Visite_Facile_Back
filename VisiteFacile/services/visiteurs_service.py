@@ -1,8 +1,8 @@
 from VisiteFacile.utils.connect import visiteurs
 from bson import ObjectId
 import csv, io
-import dtos.VisiteurDTO as DTO
-import repo.requete as repo
+import VisiteFacile.dtos.VisiteurDTO as DTO
+import VisiteFacile.repo.requete as repo
 
 
 def add_visiteur(dto: DTO.CreateVisiteurDTO):

@@ -56,9 +56,9 @@ def get_visiteurs():
     if etablissement:
         query['etablissement'] = {'$regex': etablissement, '$options': 'i'}
     if date_naissance:
-        query['date_naissance'] = date_naissance
-    if date_naissance:
-        query['bac'] = bac
+        query['date_naissance'] = {'$regex': date_naissance, '$options': 'i'}
+    if bac:
+        query['bac'] = {'$regex': bac, '$options': 'i'}
     if specialite_1:
         query['specialite_1'] = {'$regex': specialite_1, '$options': 'i'}
     if specialite_2:

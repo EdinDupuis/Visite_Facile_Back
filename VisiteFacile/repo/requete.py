@@ -1,7 +1,7 @@
 from typing import List
 
-import dtos.VisiteurDTO as DTO
-from utils.connect import visiteurs
+import VisiteFacile.dtos.VisiteurDTO as DTO
+from VisiteFacile.utils.connect import visiteurs
 from bson import ObjectId
 
 
@@ -18,12 +18,11 @@ def trouver_visiteur(query: dict, page, limit):
         for v in visiteurs_list:
             v["_id"] = str(v["_id"])
 
-
     return visiteurs_list
 
 
 def get_visiteurs(page: int, limit: int):
-    users = list(visiteurs.find({}, {"_id": 1, "nom": 1, "prénom": 1, "date_naissance": 1, "ville": 1,
+    users = list(visiteurs.find({}, {"_id": 1, "nom": 1, "prenom": 1, "date_naissance": 1, "ville": 1,
                                      "departement_visite": 1}).skip((page - 1) * limit).limit(limit))
 
     for user in users:
