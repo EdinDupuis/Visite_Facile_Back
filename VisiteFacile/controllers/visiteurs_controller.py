@@ -101,7 +101,7 @@ def login_admin() -> tuple[Response, int]:
     return jsonify({'ok': False}), 401
 
 
-@visiteurs_controller.route('stats/export', methods=['GET'])
+@visiteurs_controller.route('/export', methods=['GET'])
 def export_visiteurs() -> tuple[Response, int]:
     fichier = visiteurs_service.get_export(request.args)
 

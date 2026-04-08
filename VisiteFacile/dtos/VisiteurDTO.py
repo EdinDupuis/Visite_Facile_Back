@@ -1,6 +1,9 @@
 from typing import Optional
 
-class BaseDTO:
+from pydantic import BaseModel
+
+
+class BaseDTO(BaseModel):
     def to_mongo_dict(self):
         res = self.model_dump(exclude_none=True)
 
