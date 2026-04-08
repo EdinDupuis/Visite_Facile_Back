@@ -18,54 +18,42 @@ def add_visiteur() -> tuple[Response, int]:
     return jsonify(result), 201
 
 
-@visiteurs_controller.route('/filtre', methods=['GET'])
-def get_visiteurs():
+def build_query(args):
     query = {}
 
-    nom = request.args.get('nom')
-    prenom = request.args.get('prenom')
-    date_naissance = request.args.get('date_naissance')
-    bac = request.args.get('bac')
-    specialite_1 = request.args.get('specialite_1')
-    specialite_2 = request.args.get('specialite_2')
-    reorientation = request.args.get('reorientation')
-    departement_visite = request.args.get('departement_visite')
-    ville = request.args.get('ville')
-    etablissement = request.args.get('etablissement')
-    immersion = request.args.get('immersion')
-    evenement = request.args.get('evenement')
-    situation_particuliere = request.args.get('situation_particuliere')
+    champs_regex = [ 'nom', 'prenom', 'etablissement', 'date_naissance',
+        'bac', 'specialite_1', 'specialite_2', 'departement_visite', 'ville', 'evenement']
+
+    for champ in champs_regex:
+        valeur = args.get(champ)
+        if valeur:
+            query[champ] = {'$regex': valeur, '$options': 'i'}
+
+    if args.get('reorientation') == 'true':
+        query['reorientation'] = True
+    if args.get('immersion') == 'true':
+        query['immersion'] = True
+    if args.get('situation_particuliere') == 'true':
+        query['situation_particuliere'] = True
+
+    return query
+
+
+@visiteurs_controller.route('/stats', methods=['GET'])
+def get_stats():
+    query = build_query(request.args)
+
+    resultat = visiteurs_service.get_all(query)
+
+    return jsonify(resultat), 200
+
+
+@visiteurs_controller.route('/filtre', methods=['GET'])
+def get_visiteurs():
+    query = build_query(request.args)
 
     limit: int = request.args.get("limit", 5, type=int)
     page: int = request.args.get("page", 1, type=int)
-
-    if nom:
-        query['nom'] = {'$regex': nom, '$options': 'i'}
-    if prenom:
-        query['prenom'] = {'$regex': prenom, '$options': 'i'}
-    if etablissement:
-        query['etablissement'] = {'$regex': etablissement, '$options': 'i'}
-    if date_naissance:
-        query['date_naissance'] = {'$regex': date_naissance, '$options': 'i'}
-    if bac:
-        query['bac'] = {'$regex': bac, '$options': 'i'}
-    if specialite_1:
-        query['specialite_1'] = {'$regex': specialite_1, '$options': 'i'}
-    if specialite_2:
-        query['specialite_2'] = {'$regex': specialite_2, '$options': 'i'}
-    if departement_visite:
-        query['departement_visite'] = {'$regex': departement_visite, '$options': 'i'}
-    if ville:
-        query['ville'] = {'$regex': ville, '$options': 'i'}
-    if evenement:
-        query['evenement'] = {'$regex': evenement, '$options': 'i'}
-
-    if reorientation == 'true':
-        query['reorientation'] = True
-    if immersion == 'true':
-        query['immersion'] = True
-    if situation_particuliere == 'true':
-        query['situation_particuliere'] = True
 
     resultat = visiteurs_service.trouver_visiteurs(query, page, limit)
     return jsonify(resultat), 200

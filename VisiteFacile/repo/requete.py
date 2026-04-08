@@ -7,27 +7,31 @@ from bson import ObjectId
 def add_visiteur(insert):
     result = visiteurs.insert_one(insert)
 
+def get_all(query):
+    documents = list(visiteurs.find(query))
+    for doc in documents:
+        doc["_id"] = str(doc["_id"])
+
+    return documents
 
 def trouver_visiteur(query: dict, page, limit):
     if len(query) != 0:
         visiteurs_list = list(visiteurs.find(query).skip((page - 1) * limit).limit(limit))
-        total = visiteurs_list.count_documents({})
         for v in visiteurs_list:
             v["_id"] = str(v["_id"])
 
-        return {"visiteurs": visiteurs_list, "total": total}
+        return visiteurs_list
     else:
         return get_visiteurs(page, limit)
 
 
 def get_visiteurs(page: int, limit: int):
     users = list(visiteurs.find({}, {"_id": 1, "nom": 1, "prenom": 1, "date_naissance": 1, "ville": 1, "departement_visite": 1}).skip((page - 1) * limit).limit(limit))
-    total = visiteurs.count_documents({})
 
     for user in users:
         user["_id"] = str(user["_id"])
 
-    return {"visiteurs": users, "total": total}
+    return users
 
 
 def get_infos(visiteur_id):
