@@ -11,10 +11,11 @@ def add_visiteur(insert):
 def trouver_visiteur(query: dict, page, limit):
     if len(query) != 0:
         visiteurs_list = list(visiteurs.find(query).skip((page - 1) * limit).limit(limit))
+        total = visiteurs_list.count_documents({})
         for v in visiteurs_list:
             v["_id"] = str(v["_id"])
 
-        return visiteurs_list
+        return {"visiteurs": visiteurs_list, "total": total}
     else:
         return get_visiteurs(page, limit)
 
