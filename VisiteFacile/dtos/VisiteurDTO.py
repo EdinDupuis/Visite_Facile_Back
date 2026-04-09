@@ -28,6 +28,7 @@ class CreateVisiteurDTO(BaseDTO):
     etablissement: str
     immersion: Optional[bool] = False
     evenement: str
+    situation_particuliere: Optional[bool] = False
     autre: Optional[str] = None
 
 
@@ -46,5 +47,6 @@ class UpdateVisiteurDTO(BaseDTO):
     etablissement: Optional[str] = None
     immersion: Optional[bool] = None
     evenement: Optional[str] = None
+    situation_particuliere: Optional[bool] = None
     autre: Optional[str] = None
 
