@@ -1,4 +1,4 @@
 Projet par:
 Isidore MEILLEUR
-Edin DUPUIS
+Edin DUPUIS (et Your Name (oubli de git config))
 Denis ZAPOI
