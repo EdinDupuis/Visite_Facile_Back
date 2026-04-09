@@ -63,9 +63,9 @@ def get_export(args):
 
 
 def get_filtres(args):
-    champs_textuels = ["ville", "etablissement", "departement_visite", "bac", "specialite_1", "specialite_2", "filiere",
+    champs_textuels = ["nom", "prenom", "date_naissance", "ville", "etablissement", "departement_visite", "bac", "specialite_1", "specialite_2", "filiere",
                        "evenement"]
-    champs_booleens = ["reorientation", "immersion"]
+    champs_booleens = ["reorientation", "immersion", "situation_particuliere"]
 
     filtres = {}
 
