@@ -2,9 +2,9 @@ from dotenv import dotenv_values
 from flask import Blueprint, jsonify, request, Response
 
 
-from dtos.ParametresDTO import UpdateParametresDTO
-from services import visiteurs_service, parametres_service
-from dtos.VisiteurDTO import *
+from VisiteFacile.dtos.ParametresDTO import UpdateParametresDTO
+from VisiteFacile.services import visiteurs_service, parametres_service
+from VisiteFacile.dtos.VisiteurDTO import *
 
 visiteurs_controller = Blueprint('visiteurs', __name__, url_prefix='/visiteurs')
 
@@ -22,7 +22,7 @@ def build_query(args):
     query = {}
 
     champs_regex = [ 'nom', 'prenom', 'etablissement', 'date_naissance',
-        'bac', 'specialite_1', 'specialite_2', 'departement_visite', 'ville', 'evenement']
+        'bac', 'specialite_1', 'specialite_2', 'departement_visite', 'ville', 'situation_particuliere', 'evenement']
 
     for champ in champs_regex:
         valeur = args.get(champ)
