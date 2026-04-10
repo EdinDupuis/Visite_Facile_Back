@@ -27,11 +27,11 @@ def trouver_visiteur(query: dict, page, limit):
 
 def get_visiteurs(page: int, limit: int):
     users = list(visiteurs.find({}, {"_id": 1, "nom": 1, "prenom": 1, "date_naissance": 1, "ville": 1, "departement_visite": 1}).skip((page - 1) * limit).limit(limit))
-
+    total = visiteurs.count_documents({})
     for user in users:
         user["_id"] = str(user["_id"])
 
-    return users
+    return {"visiteurs": users, "total": total}
 
 
 def get_infos(visiteur_id):
