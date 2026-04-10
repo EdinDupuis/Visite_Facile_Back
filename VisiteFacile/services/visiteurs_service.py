@@ -20,6 +20,9 @@ def del_visiteur(visiteur_id: str):
     result = visiteurs.delete_one({"_id": ObjectId(visiteur_id)})
     return result
 
+def reset_visiteurs():
+    return repo.reset_visiteurs()
+
 
 def get_visiteurs(page: int, limit: int):
     return repo.get_visiteurs(page, limit)
