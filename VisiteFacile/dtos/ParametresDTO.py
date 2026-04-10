@@ -9,3 +9,6 @@ class UpdateParametresDTO(BaseModel):
 
 class CheckMdpDTO(BaseModel):
     ancienMdp: str
+
+class LoginDTO(BaseModel):
+    motDePasse: str

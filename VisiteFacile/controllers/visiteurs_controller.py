@@ -4,7 +4,7 @@ from dotenv import dotenv_values
 from flask import Blueprint, jsonify, request, Response
 
 
-from VisiteFacile.dtos.ParametresDTO import UpdateParametresDTO, CheckMdpDTO
+from VisiteFacile.dtos.ParametresDTO import UpdateParametresDTO, CheckMdpDTO, LoginDTO
 from VisiteFacile.services import visiteurs_service, parametres_service
 from VisiteFacile.dtos.VisiteurDTO import *
 
@@ -93,12 +93,13 @@ def update_visiteur(id: str) -> tuple[Response, int]:
     return '', 204
 
 
-@visiteurs_controller.route('/login', methods=['GET'])
+@visiteurs_controller.route('/login', methods=['POST'])
 def login_admin() -> tuple[Response, int]:
-    mdp = request.args.get('mdp', '', type=str)
+    data = request.get_json()
+    mdp = LoginDTO.model_validate(data)
     env_values = dotenv_values(".env")
     password = env_values["ADMIN_PASSWORD"]
-    if mdp.__eq__(password):
+    if mdp.motDePasse.__eq__(password):
         return jsonify({'ok': True}), 200
     return jsonify({'ok': False}), 401
 
