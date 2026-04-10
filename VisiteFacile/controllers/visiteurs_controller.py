@@ -123,3 +123,8 @@ def update_parametres() -> tuple[Response, int]:
     if not result:
         return jsonify(), 404
     return '', 204
+
+@visiteurs_controller.route('/reset', methods=['DELETE'])
+def reset_visiteurs():
+    visiteurs_service.reset_visiteurs()
+    return jsonify({"message": "Base de donnée reset"}), 200
