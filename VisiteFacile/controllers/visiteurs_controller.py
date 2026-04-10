@@ -16,6 +16,7 @@ def add_visiteur() -> tuple[Response, int]:
     visiteur = CreateVisiteurDTO.model_validate(
         data
     )
+    # visiteurs_service.simu_util() si il faut des données de test, on peut utiliser ça
     result = visiteurs_service.add_visiteur(visiteur)
     return jsonify(result), 201
 
