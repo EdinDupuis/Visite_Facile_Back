@@ -85,3 +85,5 @@ def get_filtres(args):
             filtres[f] = True
 
     return filtres
+def simu_util():
+    repo.simu_utilisateurs()

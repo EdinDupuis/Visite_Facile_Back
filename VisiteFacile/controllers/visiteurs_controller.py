@@ -1,8 +1,10 @@
+import os
+
 from dotenv import dotenv_values
 from flask import Blueprint, jsonify, request, Response
 
 
-from VisiteFacile.dtos.ParametresDTO import UpdateParametresDTO
+from VisiteFacile.dtos.ParametresDTO import UpdateParametresDTO, CheckMdpDTO, LoginDTO
 from VisiteFacile.services import visiteurs_service, parametres_service
 from VisiteFacile.dtos.VisiteurDTO import *
 
@@ -14,6 +16,7 @@ def add_visiteur() -> tuple[Response, int]:
     visiteur = CreateVisiteurDTO.model_validate(
         data
     )
+    # visiteurs_service.simu_util() si il faut des données de test, on peut utiliser ça
     result = visiteurs_service.add_visiteur(visiteur)
     return jsonify(result), 201
 
@@ -91,12 +94,13 @@ def update_visiteur(id: str) -> tuple[Response, int]:
     return '', 204
 
 
-@visiteurs_controller.route('/login', methods=['GET'])
+@visiteurs_controller.route('/login', methods=['POST'])
 def login_admin() -> tuple[Response, int]:
-    mdp = request.args.get('mdp', '', type=str)
+    data = request.get_json()
+    mdp = LoginDTO.model_validate(data)
     env_values = dotenv_values(".env")
     password = env_values["ADMIN_PASSWORD"]
-    if mdp.__eq__(password):
+    if mdp.motDePasse.__eq__(password):
         return jsonify({'ok': True}), 200
     return jsonify({'ok': False}), 401
 
@@ -128,3 +132,15 @@ def update_parametres() -> tuple[Response, int]:
 def reset_visiteurs():
     visiteurs_service.reset_visiteurs()
     return jsonify({"message": "Base de donnée reset"}), 200
+
+
+@visiteurs_controller.route('/mdp', methods=['POST'])
+def mdp():
+    data = request.get_json()
+    mdp_saisi = CheckMdpDTO.model_validate(
+        data
+    )
+    mdp_reel = os.getenv("ADMIN_PASSWORD")
+    if mdp_reel != mdp_saisi.ancienMdp:
+        return jsonify({"message":"Mot de passe incorrect" }), 401
+    return jsonify(),200
